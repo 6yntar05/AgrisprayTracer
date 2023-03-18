@@ -4,13 +4,13 @@ project(            AgrisprayTracer
     HOMEPAGE_URL    "https://github.com/6yntar05/FastBleed"
     LANGUAGES       CXX
 )
-include("./cmake/CompillerProperties.cmake")
+include("./cmake/CompilerProperties.cmake")
 include("./cmake/FindLibKML.cmake")
 
 ### OPTIONS ###
-option(USE_COMPILLER_PROPERTIES "Use cringe compiller propertires" ON)
-if(${USE_COMPILLER_PROPERTIES})
-    SetCompillerProperties()
+option(USE_Compiler_PROPERTIES "Use cringe compiler propertires" ON)
+if(${USE_Compiler_PROPERTIES})
+    SetCompilerProperties()
 endif()
 
 ### COMPILE PROPERTIES ###

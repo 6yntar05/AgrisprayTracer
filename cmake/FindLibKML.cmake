@@ -1,11 +1,9 @@
 function(FIND_LibKML)
 
-    ### Boost ###
     find_package(Boost REQUIRED)
     include_directories(${Boost_INCLUDE_DIRS})
     link_directories(${Boost_LIBRARY_DIRS})
 
-    find_package(ZLIB REQUIRED)
     find_library(MINIZIP_LIB MINIZIP)
     find_package(URIPARSER REQUIRED)
 

@@ -1,7 +1,3 @@
-// parsekml.cc
-// This program parses a KML Placemark from a memory buffer and prints
-// the value of the <name> element on standard output.
-
 #include <iostream>
 #include <string>
 #include "kml/dom.h"  // The KML DOM header.
