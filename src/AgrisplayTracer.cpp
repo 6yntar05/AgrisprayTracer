@@ -24,12 +24,12 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Try to trace polygon for agricultural drone (Simple version for now)
-	agris::flightParams params {
+	agris::traceParams params {
 		/*alt(m)*/ 8.0, /*speed(knots)*/ 10.0, /*radius(m)*/ 10.0, /*servo(?)*/ 255.0
 	};
 	agris::simpleTrace tracer { field, params };
 
-	agris::flightPlan plan = tracer.getFlightplan();
+	agris::mavlink::flightPlan plan = tracer.getFlightplan();
 	params.radius = 20.0;
 	tracer.updateFlightParams(params);
 	plan = tracer.getFlightplan();

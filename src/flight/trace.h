@@ -1,34 +1,42 @@
 #pragma once
 #include "poly/field.h"
-#include "flight/waypoints.h"
+#include "flight/mavlink.h"
 
 #include <vector>
 
 namespace agris {
+struct traceParams {
+    float altitude;
+    float speed;
+    double radius;
+    float servo;
+};
+
 class simpleTrace {
     private:
     // Input data
     geo::field field;
-    flightParams params;
+    traceParams params;
     // Waypoints
-    flightPlan plan;
+    mavlink::flightPlan plan;
 
     public:
     // Service
-    simpleTrace(const geo::field& field, const flightParams& params)
+    simpleTrace(const geo::field& field, const traceParams& params)
         : field(field), params(params) { this->trace(); }
     
     void trace() {
+        this->plan = {};
         // TODO
         //field.outerBoundary
     }
-    flightPlan getFlightplan() {
+    mavlink::flightPlan getFlightplan() {
         return plan;
     }
     
 
     // Updaters
-    void updateFlightParams(const flightParams& params) {
+    void updateFlightParams(const traceParams& params) {
         this->params = params;
         this->trace();
     }
