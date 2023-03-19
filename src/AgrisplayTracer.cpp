@@ -3,14 +3,13 @@
 
 #include "poly/field.h"
 #include "poly/parser.h"
-#include "tracer/algo.h"
+#include "flight/trace.h"
 
 int main(int argc, char* argv[]) {
 	if (argc <= 1) {
 		std::cerr << "Put filepath to argument" << std::endl;
 		exit(-1);
 	}
-
 	// Print polygon content
 	agris::geo::field field = agris::input::parseFile(argv[1]);
 	std::cout << "OuterBoundary -> LinearRing:\n" << std::setprecision(16);
@@ -30,10 +29,10 @@ int main(int argc, char* argv[]) {
 	};
 	agris::simpleTrace tracer { field, params };
 
-	tracer.getFlightplan();
-	params.radius = 20;
+	agris::flightPlan plan = tracer.getFlightplan();
+	params.radius = 20.0;
 	tracer.updateFlightParams(params);
-	tracer.getFlightplan();
+	plan = tracer.getFlightplan();
 
 	return 0;
 }

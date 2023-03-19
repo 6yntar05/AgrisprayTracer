@@ -1,18 +1,10 @@
 #pragma once
 #include "poly/field.h"
+#include "flight/waypoints.h"
+
+#include <vector>
 
 namespace agris {
-struct flightPlan {
-
-};
-
-struct flightParams {
-    float altitude;
-    float speed;
-    double radius;
-    float servo;
-};
-
 class simpleTrace {
     private:
     // Input data
@@ -24,10 +16,11 @@ class simpleTrace {
     public:
     // Service
     simpleTrace(const geo::field& field, const flightParams& params)
-        : field(field), params(params) {}
+        : field(field), params(params) { this->trace(); }
     
     void trace() {
-        plan = {};
+        // TODO
+        //field.outerBoundary
     }
     flightPlan getFlightplan() {
         return plan;
