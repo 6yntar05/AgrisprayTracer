@@ -3,6 +3,7 @@
 
 #include "poly/field.h"
 #include "poly/parser.h"
+#include "tracer/algo.h"
 
 int main(int argc, char* argv[]) {
 	if (argc <= 1) {
@@ -10,6 +11,7 @@ int main(int argc, char* argv[]) {
 		exit(-1);
 	}
 
+	// Print polygon content
 	agris::geo::field field = agris::input::parseFile(argv[1]);
 	std::cout << "OuterBoundary -> LinearRing:\n" << std::setprecision(16);
 	for (auto& i : field.outerBoundary) {
@@ -21,5 +23,17 @@ int main(int argc, char* argv[]) {
 			std::cout << "\t Latitude: " << i.latitude << "; Longitude: " << i.longitude << '\n';
 		}
 	}
+
+	// Try to trace polygon for agricultural drone (Simple version for now)
+	agris::flightParams params {
+		/*alt(m)*/ 8.0, /*speed(knots)*/ 10.0, /*radius(m)*/ 10.0, /*servo(?)*/ 255.0
+	};
+	agris::simpleTrace tracer { field, params };
+
+	tracer.getFlightplan();
+	params.radius = 20;
+	tracer.updateFlightParams(params);
+	tracer.getFlightplan();
+
 	return 0;
 }
