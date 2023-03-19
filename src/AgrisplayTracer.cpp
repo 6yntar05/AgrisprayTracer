@@ -1,21 +1,28 @@
-#include <iostream>
 #include <string>
+#include <iomanip>
+#include <limits>
+#include <numbers>
+#include <iostream>
 
-#include "poly/reader.h"
-#include "kml/dom.h"
+#include "poly/field.h"
+#include "poly/parser.h"
 
-int main() {
-	const std::string file = agris::readfile("./2.kml");
-	std::cerr << file << std::endl;
+int main(int argc, char* argv[]) {
+	if (argc <= 1) {
+		std::cerr << "Put filepath to argument" << std::endl;
+		exit(-1);
+	}
 
-	std::string errors;
-	kmldom::ElementPtr element = kmldom::Parse(file, &errors);
-
-	// Convert the type of the root element of the parse.
-	const kmldom::KmlPtr kml = kmldom::AsKml(element);
-	const kmldom::PlacemarkPtr placemark =
-		kmldom::AsPlacemark(kml->get_feature());
-
-	// Access the value of the <name> element.
-	std::cout << "The Placemark name is: " << placemark->get_name() << std::endl;
+	agris::geo::field field = agris::input::parseFile(argv[1]);
+	std::cout << "OuterBoundary -> LinearRing:\n" << std::setprecision(16);
+	for (auto& i : field.outerBoundary) {
+		std::cout << "\t Latitude: " << i.latitude << "; Longitude: " << i.longitude << '\n';
+	}
+	for (auto& boundary : field.innerBoundaries) {
+		std::cout << "InnerBoundary -> LinearRing:\n";
+		for (auto& i : boundary) {
+			std::cout << "\t Latitude: " << i.latitude << "; Longitude: " << i.longitude << '\n';
+		}
+	}
+	return 0;
 }
