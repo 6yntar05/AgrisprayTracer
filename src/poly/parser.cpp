@@ -1,12 +1,11 @@
 #include "poly/parser.h"
 
-#include <kml/dom.h>
-#include <kml/dom/parser.h>
-#include <kml/dom/geometry.h>
+#include <iostream>
 #include <kml/dom/kml22.h>
-#include <kml/dom/kml_cast.h>
-#include <kml/dom/kml_ptr.h>
-#include "kml/base/file.h"
+#include <string>
+
+#include <kml/dom.h>
+#include <kml/base/file.h>
 
 namespace agris::input {
     namespace kml {
@@ -47,15 +46,40 @@ namespace agris::input {
         static geo::field processMultiGeometry(const kmldom::MultiGeometry* multi_geometry) {
             // Extract single geometry
             if (multi_geometry->get_geometry_array_size() != 1)
-                std::cerr << "Unsupported geometry count! It only makes sense to process single geometry" << std::endl;
+                std::cerr << "[!!!] Unsupported geometry count! It only makes sense to process single geometry" << std::endl;
             const kmldom::GeometryPtr& singleGeometry = multi_geometry->get_geometry_array_at(0);
 
             // Process every geometry derivative
             if (singleGeometry->Type() != kmldom::Type_Polygon)
-                std::cerr << "Unsupported geometry data! It only makes sense to process polygons" << std::endl;
+                std::cerr << "[!!!] Unsupported geometry data! It only makes sense to process polygons" << std::endl;
             
             const kmldom::PolygonPtr& polygon = kmldom::AsPolygon(singleGeometry);
             return processPolygon(polygon);
+        }
+
+        static geo::field processGeometry(const kmldom::GeometryPtr geometry) {
+            geo::field field;
+
+            switch (geometry.get()->Type()) {
+                case kmldom::Type_MultiGeometry:
+                    field = kml::processMultiGeometry(
+                        kmldom::AsMultiGeometry(geometry).get()
+                    );
+                    break;
+
+                case kmldom::Type_Polygon:
+                    field = kml::processPolygon(
+                        kmldom::AsPolygon(geometry).get()
+                    );
+                    break;
+                    
+                default:
+                    std::cerr << "[!!!] Unknown geometry type!\n"
+                        << "\tSupported: kmldom::Type_MultiGeometry consisting of Polygons or Polygon itself"
+                        << std::endl;
+            }
+            
+            return field;
         }
     } // namespace kml
 
@@ -71,7 +95,6 @@ namespace agris::input {
     }
 
     geo::field parseFile(const std::string path) {
-        geo::field field;
         // Read .kml code from file
         std::string code;
         kmlbase::File::ReadFileToString(path, &code);
@@ -87,20 +110,10 @@ namespace agris::input {
         const kmldom::KmlPtr kml = kmldom::AsKml(element);
         const kmldom::PlacemarkPtr placemark = kmldom::AsPlacemark(kml->get_feature());
 
-        // Access the (multi)geometry if exist
+        // Parse (Multi)Geometry / Polygon if exist
         if (!placemark->has_geometry())
             std::cerr << "[!!!] Placemart has no geometry!\n";
-        kmldom::GeometryPtr geometry = placemark->get_geometry();
-        
-        // Process MultiGeometry
-        kmldom::PointPtr point;
-        if (geometry.get()->Type() == kmldom::Type_MultiGeometry)
-            field = kml::processMultiGeometry(kmldom::AsMultiGeometry(geometry).get());
-        else
-            std::cerr << "Unknown geometry type! Supported: kmldom::Type_MultiGeometry consisting of Polygons" << std::endl;
-            // TODO: Add single polygon support
-
-        return field;
+        return kml::processGeometry(placemark->get_geometry());
     }
 
 } // namespace agris::input
