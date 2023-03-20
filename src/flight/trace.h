@@ -20,6 +20,8 @@ class simpleTrace {
     traceParams params;
     // Waypoints
     mavlink::flightPlan plan;
+    // Internal data
+    geo::coordinate begin;
 
     public:
     // Service

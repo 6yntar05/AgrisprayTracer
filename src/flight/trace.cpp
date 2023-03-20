@@ -24,25 +24,34 @@ void simpleTrace::trace() {
         if (i == 0) {
             // First point - takeoff + CurrentWP
             point = {
-                MAV_CMD::MAV_CMD_NAV_TAKEOFF,
-                1, {}, {}, {}, {}, {},
-                sourceCoordinate.latitude, sourceCoordinate.longitude, this->params.altitude
+                MAV_CMD::MAV_CMD_NAV_TAKEOFF, 1, {},
+                {}, {}, {}, {}, sourceCoordinate.latitude, sourceCoordinate.longitude, this->params.altitude
             };
+            this->begin = geo::coordinate { sourceCoordinate.latitude, sourceCoordinate.longitude };
+            newplan.push_back(point);
+            point.command = MAV_CMD_DO_SPRAYER;
+            point.param1 = 1;
 
         } else if (i+1 == bound.size()) {
             // Last point - landing
             point = {
-                MAV_CMD::MAV_CMD_NAV_LAND,
-                {}, {}, {}, {}, {}, {},
-                sourceCoordinate.latitude, sourceCoordinate.longitude, this->params.altitude
+                MAV_CMD::MAV_CMD_NAV_WAYPOINT, {}, {},
+                {}, {}, {}, {}, sourceCoordinate.latitude, sourceCoordinate.longitude, this->params.altitude
+            };
+            newplan.push_back(point);
+            point.command = MAV_CMD_DO_SPRAYER;
+            point.param1 = 0;
+            newplan.push_back(point);
+            point = {
+                MAV_CMD::MAV_CMD_NAV_LAND, {}, {},
+                {}, {}, {}, {}, this->begin.latitude, this->begin.longitude, this->params.altitude
             };
 
         } else {
             // Route
             point = {
-                MAV_CMD::MAV_CMD_NAV_WAYPOINT,
-                {}, {}, {}, {}, {}, {},
-                sourceCoordinate.latitude, sourceCoordinate.longitude, this->params.altitude
+                MAV_CMD::MAV_CMD_NAV_WAYPOINT, {}, {},
+                {}, {}, {}, {}, sourceCoordinate.latitude, sourceCoordinate.longitude, this->params.altitude
             };
         }
 

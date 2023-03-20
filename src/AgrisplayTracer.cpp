@@ -6,8 +6,8 @@
 #include "flight/trace.h"
 
 int main(int argc, char* argv[]) {
-	if (argc <= 1) {
-		std::cerr << "Put filepath to argument" << std::endl;
+	if (argc <= 2) {
+		std::cerr << "Put input and output filepath to argument" << std::endl;
 		exit(-1);
 	}
 	// Print polygon content
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "Generated flightplan: \n"
 		<< plan.toString() << std::endl;
-	plan.toFile("./file.waypoints");
+	plan.toFile(argv[2]);
 
 	return 0;
 }
