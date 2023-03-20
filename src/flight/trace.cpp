@@ -12,6 +12,7 @@ simpleTrace::simpleTrace(const geo::field& field, const traceParams& params)
 
 void simpleTrace::trace() {
     std::vector<mavlink::waypoint> newplan;
+    //newplan.push_back({{}, 1});
 
     // Fly around the perimeter
     std::vector<geo::coordinate> bound = this->field.outerBoundary;
@@ -21,11 +22,11 @@ void simpleTrace::trace() {
         // Create points
         mavlink::waypoint point;
         if (i == 0) {
-            // First point - takeoff
+            // First point - takeoff + CurrentWP
             point = {
                 MAV_CMD::MAV_CMD_NAV_TAKEOFF,
-                {}, {}, {}, {}, {}, {},
-                sourceCoordinate.latitude, sourceCoordinate.longitude
+                1, {}, {}, {}, {}, {},
+                sourceCoordinate.latitude, sourceCoordinate.longitude, this->params.altitude
             };
 
         } else if (i+1 == bound.size()) {
@@ -33,7 +34,7 @@ void simpleTrace::trace() {
             point = {
                 MAV_CMD::MAV_CMD_NAV_LAND,
                 {}, {}, {}, {}, {}, {},
-                sourceCoordinate.latitude, sourceCoordinate.longitude
+                sourceCoordinate.latitude, sourceCoordinate.longitude, this->params.altitude
             };
 
         } else {
@@ -41,7 +42,7 @@ void simpleTrace::trace() {
             point = {
                 MAV_CMD::MAV_CMD_NAV_WAYPOINT,
                 {}, {}, {}, {}, {}, {},
-                sourceCoordinate.latitude, sourceCoordinate.longitude
+                sourceCoordinate.latitude, sourceCoordinate.longitude, this->params.altitude
             };
         }
 

@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "Generated flightplan: \n"
 		<< plan.toString() << std::endl;
+	plan.toFile("./file.waypoints");
 
 	return 0;
 }

@@ -28,7 +28,7 @@ class flightPlan {
   public:
     std::vector<waypoint> plan;
 
-    std::string toString();
+    std::string toString(uint precision = 14);
     void toFile(std::string path);
 };
 

@@ -7,10 +7,10 @@
 namespace agris {
 
 struct traceParams {
-    float altitude;
-    float speed;
-    double radius;
-    float servo;
+    float altitude  = 100.0;
+    float speed     = 5.0;
+    double radius   = 10.0;
+    float servo     = 0.0;
 };
 
 class simpleTrace {
