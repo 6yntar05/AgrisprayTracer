@@ -28,7 +28,7 @@ void simpleTrace::trace() {
                 sourceCoordinate.latitude, sourceCoordinate.longitude
             };
 
-        } else if (i == bound.size()) {
+        } else if (i+1 == bound.size()) {
             // Last point - landing
             point = {
                 MAV_CMD::MAV_CMD_NAV_LAND,
