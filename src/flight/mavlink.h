@@ -2,17 +2,14 @@
 #include <vector>
 #include <string>
 
+#include "external/fastmavlink/mav_cmd.h"
+
 namespace agris {
 namespace mavlink { // MavLink v? compatible data
-enum mavCommand {
-    // MavLink MAV_CMD: Partial implementation
-    // https://github.com/ArduPilot/mavlink/blob/master/message_definitions/v1.0/common.xml
-    TODO
-};
 
 struct waypoint {
     // ID <- index of waypoints
-    mavCommand command;
+    MAV_CMD command;
     uint currentWP;
     uint coordFrame;
     double param1;

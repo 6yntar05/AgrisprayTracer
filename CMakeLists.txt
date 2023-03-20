@@ -30,6 +30,9 @@ message         (">> Finding Qt")
 find_package    (QT NAMES Qt5 Qt6 QUIET COMPONENTS Widgets)
 find_package    (Qt${QT_VERSION_MAJOR} QUIET COMPONENTS Widgets)
 
+### MavLink CMD header ###
+include_directories(AFTER SYSTEM ./external/fastmavlink)
+
 ### SRC FILES ###
 file(GLOB_RECURSE SRCFILES "./src/*.cpp")
 file(GLOB_RECURSE SRCFILES ${SRCFILES} "./src/ui/*")
