@@ -34,5 +34,8 @@ int main(int argc, char* argv[]) {
 	tracer.updateFlightParams(params);
 	plan = tracer.getFlightplan();
 
+	std::cout << "Generated flightplan: \n"
+		<< plan.toString() << std::endl;
+
 	return 0;
 }

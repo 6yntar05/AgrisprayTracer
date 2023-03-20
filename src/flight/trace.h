@@ -5,6 +5,7 @@
 #include <vector>
 
 namespace agris {
+
 struct traceParams {
     float altitude;
     float speed;
@@ -22,27 +23,14 @@ class simpleTrace {
 
     public:
     // Service
-    simpleTrace(const geo::field& field, const traceParams& params)
-        : field(field), params(params) { this->trace(); }
+    simpleTrace(const geo::field& field, const traceParams& params);
     
-    void trace() {
-        this->plan = {};
-        // TODO
-        //field.outerBoundary
-    }
-    mavlink::flightPlan getFlightplan() {
-        return plan;
-    }
-    
+    void trace();
+    mavlink::flightPlan getFlightplan();
 
     // Updaters
-    void updateFlightParams(const traceParams& params) {
-        this->params = params;
-        this->trace();
-    }
-    void updateFlightField(const geo::field& field) {
-        this->field = field;
-        this->trace();
-    }
+    void updateFlightParams(const traceParams& params);
+    void updateFlightField(const geo::field& field);
 };
+
 } // namespace agris

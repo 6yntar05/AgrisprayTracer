@@ -23,7 +23,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ### LibKML ###
 FIND_LibKML() # Write -l* to LibKML_LIBS for target_link_libraries()
-# Requies Boost
 
 ### Finding QT ###
 message         (">> Finding Qt")
