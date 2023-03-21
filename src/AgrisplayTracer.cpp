@@ -1,13 +1,19 @@
+#define TEST
+
 #include <iostream>
 #include <iomanip>
 
 #include "poly/field.h"
 #include "poly/parser.h"
+#ifdef TEST
+#include "poly/utils/geo.h"
+#include "poly/utils/quantize.h"
+#endif
 #include "flight/trace.h"
 
 int main(int argc, char* argv[]) {
-	if (argc <= 2) {
-		std::cerr << "Put input and output filepath to argument" << std::endl;
+	if (argc <= 1) {
+		std::cerr << "Usage: ./AgrisprayTracer <INPUT PATH> [OUTPUT PATH]" << std::endl;
 		exit(-1);
 	}
 	// Print polygon content
@@ -36,7 +42,23 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "Generated flightplan: \n"
 		<< plan.toString() << std::endl;
-	plan.toFile(argv[2]);
+	if (argc <= 2) 
+		plan.toFile(argv[2]);
+	
+#ifdef TEST
+	// Poly area corners
+	const auto test = findCorners(field);
+	std::cerr << std::setprecision(16)
+		<< "FIRST: " << test.first.latitude << ", " << test.first.longitude
+		<< "\nSECOND: " << test.second.latitude << ", " << test.second.longitude
+		<< std::endl;
+
+	// Area size in metters
+	std::cerr << std::setprecision(16)
+		<< "LONG: " << agris::geo::pointsDiff(test.first, {test.second.latitude, test.first.longitude}) * 1000.0 << " m\n"
+		<< "WIDE: " << agris::geo::pointsDiff(test.first, {test.first.latitude, test.second.longitude}) * 1000.0 << " m"
+		<< std::endl;
+#endif
 
 	return 0;
 }
