@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(            AgrisprayTracer
     DESCRIPTION     "Trace .kml poly to flight-plan waypoints for agricultural drone"
-    HOMEPAGE_URL    "https://github.com/6yntar05/FastBleed"
+    HOMEPAGE_URL    "https://github.com/6yntar05/AgrisprayTracer"
     LANGUAGES       CXX
 )
 include("./cmake/CompilerProperties.cmake")
