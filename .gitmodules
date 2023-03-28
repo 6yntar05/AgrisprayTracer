@@ -1,0 +1,3 @@
+[submodule "external/LibKML"]
+	path = external/LibKML
+	url = https://github.com/libkml/libkml
