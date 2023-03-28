@@ -5,7 +5,7 @@
 ## Building
 ### Linux:
 - Install the dependencies:
-    - `cmake git gcc boost minizip uriparser`
+    - `sudo apt update; sudo apt install cmake git build-essential minizip liburiparser-dev liburiparser1 qt6-base-dev qt6-base-dev-tools libboost-tools-dev`
 - Clone repo and submodules:
 - `git clone https://github.com/6yntar05/AgrisprayTracer`
 - Build LibKML by hands: (because too old cmake ver.) from submodule:

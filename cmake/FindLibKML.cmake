@@ -5,7 +5,7 @@ function(FIND_LibKML)
     link_directories(${Boost_LIBRARY_DIRS})
 
     find_library(MINIZIP_LIB MINIZIP)
-    find_package(URIPARSER REQUIRED)
+    find_package(URIPARSER QUIET)
 
     find_package(LibKML QUIET)
     if(LibKML)
