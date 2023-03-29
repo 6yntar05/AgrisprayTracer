@@ -15,11 +15,12 @@ struct quantizationUnit {
 } // namespace tracing
 
 struct traceParams {
-    float altitude  = 100.0;
-    float speed     = 5.0;
-    double radius   = 10.0;
-    float servo     = 0.0;
-    double droneSize= 5.0;
+    double altitude  = 100.0;
+    double speed     = 5.0;
+    double sprayRate = 5.0;
+    double radius    = 10.0;
+    double servo     = 0.0;
+    double droneSize = 5.0;
 };
 
 class simpleTrace {

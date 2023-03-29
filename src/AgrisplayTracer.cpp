@@ -1,51 +1,47 @@
 #define TEST
-
 #include <iostream>
-#include <iomanip>
 
 #include "poly/field.h"
 #include "poly/parser.h"
+#include "flight/trace.h"
+#include "flight/mavlink.h"
+
 #ifdef TEST
+#include <iomanip>
 #include "poly/utils/geo.h"
 #include "poly/utils/quantize.h"
 #endif
-#include "flight/trace.h"
+
 
 int main(int argc, char* argv[]) {
-	if (argc <= 1) {
+	if (argc <= 1 || argc > 3) {
 		std::cerr << "Usage: ./AgrisprayTracer <INPUT PATH> [OUTPUT PATH]" << std::endl;
-		exit(-1);
+		exit(0);
 	}
-	// Print polygon content
+	// Parse .KML file // TODO: .poly parser
 	agris::geo::field field = agris::input::parseFile(argv[1]);
-	std::cout << "OuterBoundary -> LinearRing:\n" << std::setprecision(16);
-	for (auto& i : field.outerBoundary) {
-		std::cout << "\t Latitude: " << i.latitude << "; Longitude: " << i.longitude << '\n';
-	}
-	for (auto& boundary : field.innerBoundaries) {
-		std::cout << "InnerBoundary -> LinearRing:\n";
-		for (auto& i : boundary) {
-			std::cout << "\t Latitude: " << i.latitude << "; Longitude: " << i.longitude << '\n';
-		}
-	}
+	// std::cout << field.toString();
 
 	// Try to trace polygon for agricultural drone (Simple version for now)
-	agris::traceParams params {
+	agris::traceParams params { // Params for tracer
 		/*alt(m)*/ 8.0, /*speed(knots)*/ 10.0, /*radius(m)*/ 10.0, /*servo(?)*/ 255.0
 	};
+	// Create tracer
 	agris::simpleTrace tracer { field, params };
-
+	// Trace
 	agris::mavlink::flightPlan plan = tracer.getFlightplan();
+	// Update tracer params & retrace
 	params.radius = 20.0;
 	tracer.updateFlightParams(params);
 	plan = tracer.getFlightplan();
 
+	// Print (& write) flightplan as .waypoints
 	std::cout << "Generated flightplan: \n"
 		<< plan.toString() << std::endl;
-	if (argc <= 2) 
+	if (argc >= 3)
 		plan.toFile(argv[2]);
 	
-#ifdef TEST
+#ifdef TEST	// (internal utils for GUI and Tracer)
 	// Poly area corners
 	const auto test = findCorners(field);
 	std::cerr << std::setprecision(16)

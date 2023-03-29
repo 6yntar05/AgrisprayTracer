@@ -8,7 +8,9 @@ namespace agris {
 
 // class simpleTrace
 simpleTrace::simpleTrace(const geo::field& field, const traceParams& params)
-    : field(field), params(params) { this->trace(); }
+: field(field), params(params) {
+    this->trace();
+}
 
 void simpleTrace::trace() {
     std::vector<mavlink::waypoint> newplan;
