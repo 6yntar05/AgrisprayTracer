@@ -23,7 +23,7 @@ struct waypoint {
 
 class flightPlan {
   private:
-    static constexpr std::string fileHeader = "QGC WPL 110\n";
+    /*static constexpr*/ std::string fileHeader = "QGC WPL 110\n";
 
   public:
     std::vector<waypoint> plan;

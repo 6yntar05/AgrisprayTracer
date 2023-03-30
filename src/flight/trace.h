@@ -14,13 +14,40 @@ struct quantizationUnit {
 
 } // namespace tracing
 
+struct sprayParams {
+  // Necessary:
+    double rate;    // [?? per ??]
+
+  // Optional:
+    double speed;        // Speed affects spray rate, if sprayPower is unsupported [kmph]
+    uint pwm;            // If supported [0 < analog value < maxPossiblePWM]
+    uint maxPossiblePWM; // Max possible analog value for pwm [0 - no support]
+
+    sprayParams(double rate, double speed, uint maxPossiblePWM = 4096) // Implies proportionality // TODO: lambda
+    : rate(rate), speed(speed), maxPossiblePWM(maxPossiblePWM) {
+        // Calculate pwm by speed and sprayrate
+        this->pwm = 0;
+        // TODO
+    }
+
+    sprayParams(double rate)
+    : rate(rate), pwm(0), maxPossiblePWM(0) {
+        // Calculate speed by spray rate
+        this->speed = 0.0;
+        // TODO
+    }
+};
+
 struct traceParams {
+    // General:
+    geo::coordinate takeoffCoord;
+    geo::coordinate landingCoord = takeoffCoord;
     double altitude  = 100.0;
-    double speed     = 5.0;
-    double sprayRate = 5.0;
-    double radius    = 10.0;
-    double servo     = 0.0;
     double droneSize = 5.0;
+
+    // Spray:
+    sprayParams spray;
+    double radius;  // [meters]
 };
 
 class simpleTrace {
