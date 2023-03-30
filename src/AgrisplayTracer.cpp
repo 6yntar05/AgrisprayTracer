@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 	}
 	// Parse .KML file // TODO: .poly parser
 	agris::geo::field field = agris::input::parseFile(argv[1]);
-	// std::cout << field.toString();
+	std::cout << field.toString();
 
 	// Try to trace polygon for agricultural drone (Simple version for now)
 	agris::traceParams params { // Params for tracer
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 	plan = tracer.getFlightplan();
 
 	// Print (& write) flightplan as .waypoints
-	//std::cout << "Generated flightplan: \n" << plan.toString() << std::endl;
+	std::cout << "Generated flightplan: \n" << plan.toString() << std::endl;
 	if (argc >= 3)
 		plan.toFile(argv[2]);
 	
