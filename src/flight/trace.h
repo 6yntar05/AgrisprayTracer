@@ -1,6 +1,7 @@
 #pragma once
 #include "poly/field.h"
 #include "flight/mavlink.h"
+#include "poly/utils/quantize.h"
 
 #include <vector>
 

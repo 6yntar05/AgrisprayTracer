@@ -1,4 +1,4 @@
-#define TEST
+//#define TEST
 #include <iostream>
 
 #include "poly/field.h"
@@ -36,8 +36,7 @@ int main(int argc, char* argv[]) {
 	plan = tracer.getFlightplan();
 
 	// Print (& write) flightplan as .waypoints
-	std::cout << "Generated flightplan: \n"
-		<< plan.toString() << std::endl;
+	//std::cout << "Generated flightplan: \n" << plan.toString() << std::endl;
 	if (argc >= 3)
 		plan.toFile(argv[2]);
 	
