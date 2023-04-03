@@ -51,7 +51,7 @@ struct traceParams {
     double radius;  // [meters]
 };
 
-class simpleTrace {
+class tracer {
     private:
     // Input data
     geo::field field;
@@ -60,12 +60,13 @@ class simpleTrace {
     mavlink::flightPlan plan;
     // Internal data
     geo::coordinate begin;
+    geo::quanizedField quants;
 
     public:
     // Service
-    simpleTrace(const geo::field& field, const traceParams& params);
+    tracer(const geo::field& field, const traceParams& params);
     
-    void trace();
+    void trace() noexcept;
     mavlink::flightPlan getFlightplan();
 
     // Updaters

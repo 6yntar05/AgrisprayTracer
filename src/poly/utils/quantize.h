@@ -1,7 +1,9 @@
 #pragma once
 #include "poly/field.h"
+#include "poly/utils/geo.h"
 
 #include <vector>
+#include <iostream>
 
 namespace agris::geo {
 
@@ -15,8 +17,14 @@ class quanizedField {
     std::vector<quant> quantized;
 
   public:
-    quanizedField(field _field, double droneSize, double sprayRadius) {
+    quanizedField(field field, double droneSize, double sprayRadius) {
         this->quantized = {};
+
+        // Find corners to split field:
+        auto corners = findCorners(field);
+
+        std::cout << '['<<corners.first.latitude<<','<<corners.first.longitude
+          << "] <-> ["<<corners.second.latitude<<','<<corners.second.longitude<<']' << std::endl;
     }
 };
 
