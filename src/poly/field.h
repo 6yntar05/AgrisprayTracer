@@ -6,19 +6,19 @@
 
 namespace agris::geo {
 
-struct coordinate {
+struct Coordinate {
     double latitude;
     double longitude;
     //double altitude;
     //double heading;
 };
 
-using boundary = std::vector<coordinate>;
+using Boundary = std::vector<Coordinate>;
 
-struct field {
+struct Field {
     //std::string_view name;
-    boundary outerBoundary;
-    std::vector<boundary> innerBoundaries; // Extra fragments; Will be considered during the tracing
+    Boundary outerBoundary;
+    std::vector<Boundary> innerBoundaries; // Extra fragments; Will be considered during the tracing
 
     std::string toString() {
         std::stringstream stream;
@@ -26,9 +26,9 @@ struct field {
         for (auto& i : this->outerBoundary) {
             stream << "\t Latitude: " << i.latitude << "; Longitude: " << i.longitude << '\n';
         }
-        for (auto& boundary : this->innerBoundaries) {
+        for (auto& Boundary : this->innerBoundaries) {
             stream << "InnerBoundary -> LinearRing:\n";
-            for (auto& i : boundary) {
+            for (auto& i : Boundary) {
                 stream << "\t Latitude: " << i.latitude << "; Longitude: " << i.longitude << '\n';
             }
         }

@@ -12,17 +12,17 @@ int main(int argc, char* argv[]) {
 		exit(0);
 	}
 	// Parse .KML file // TODO: .poly parser
-	agris::geo::field field = agris::input::parseFile(argv[1]);
+	agris::geo::Field field = agris::input::parseFile(argv[1]);
 	std::cout << field.toString();
 
 	// Try to trace polygon for agricultural drone (Simple version for now)
-	agris::traceParams params { // Params for tracer
+	agris::TraceParams params { // Params for tracer
 		{}, {}, {}, {}, {{}}, {}
 	};
 
 	// Trace
-	agris::tracer tracer { field, params };
-	agris::mavlink::flightPlan plan = tracer.getFlightplan();
+	agris::Tracer tracer { field, params };
+	agris::mavlink::FlightPlan plan = tracer.getFlightplan();
 
 	// Print (& write) flightplan as .waypoints
 #ifndef TEST

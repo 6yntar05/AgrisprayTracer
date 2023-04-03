@@ -4,6 +4,6 @@
 
 namespace agris::input {
 
-geo::field parseFile(const std::string path);
+geo::Field parseFile(const std::string path);
 
 }

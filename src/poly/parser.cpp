@@ -9,11 +9,12 @@
 
 namespace agris::input {
 namespace kml {
-    static geo::boundary processLinearRing(kmldom::CoordinatesPtr kmlCoords) {
-        geo::boundary boundary;
+
+    static geo::Boundary processLinearRing(kmldom::CoordinatesPtr kmlCoords) {
+        geo::Boundary boundary;
 
         for (size_t i = 0; i < kmlCoords->get_coordinates_array_size(); i++) {
-            geo::coordinate coord {
+            geo::Coordinate coord {
                 kmlCoords->get_coordinates_array_at(i).get_latitude(),
                 kmlCoords->get_coordinates_array_at(i).get_longitude()
             };
@@ -23,8 +24,8 @@ namespace kml {
         return boundary;
     }
 
-    static geo::field processPolygon(const kmldom::PolygonPtr poly) {
-        geo::field field;
+    static geo::Field processPolygon(const kmldom::PolygonPtr poly) {
+        geo::Field field;
 
         // Extract outer boundary
         if (!poly->has_outerboundaryis())
@@ -33,7 +34,7 @@ namespace kml {
         field.outerBoundary = processLinearRing(coords);
 
         // Extract inner boundaries
-        std::vector<geo::boundary> inner;
+        std::vector<geo::Boundary> inner;
         for (size_t i = 0; i < poly->get_innerboundaryis_array_size(); i++)
             inner.push_back(
                 processLinearRing(poly->get_innerboundaryis_array_at(i)->get_linearring()->get_coordinates())
@@ -43,7 +44,7 @@ namespace kml {
         return field;
     }
 
-    static geo::field processMultiGeometry(const kmldom::MultiGeometry* multi_geometry) {
+    static geo::Field processMultiGeometry(const kmldom::MultiGeometry* multi_geometry) {
         // Extract single geometry
         if (multi_geometry->get_geometry_array_size() != 1)
             std::cerr << "[!!!] Unsupported geometry count! It only makes sense to process single geometry" << std::endl;
@@ -57,8 +58,8 @@ namespace kml {
         return processPolygon(polygon);
     }
 
-    static geo::field processGeometry(const kmldom::GeometryPtr geometry) {
-        geo::field field;
+    static geo::Field processGeometry(const kmldom::GeometryPtr geometry) {
+        geo::Field field;
 
         switch (geometry.get()->Type()) {
             case kmldom::Type_MultiGeometry:
@@ -94,7 +95,7 @@ static void cropToPlacemarks(
     code = "<kml>\n" + code.substr(start, stop - start + stopTagLen) + "\n</kml>";
 }
 
-geo::field parseFile(const std::string path) {
+geo::Field parseFile(const std::string path) {
     // Read .kml code from file
     std::string code;
     kmlbase::File::ReadFileToString(path, &code);

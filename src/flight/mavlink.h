@@ -6,7 +6,7 @@
 
 namespace agris::mavlink { // MavLink v? compatible data
 
-struct waypoint {
+struct Waypoint {
     // ID <- index of waypoints
     MAV_CMD command = MAV_CMD_NAV_WAYPOINT;
     uint currentWP  = 0;
@@ -21,12 +21,12 @@ struct waypoint {
     bool autocontinue = true;
 };
 
-class flightPlan {
+class FlightPlan {
   private:
     /*static constexpr*/ std::string fileHeader = "QGC WPL 110\n";
 
   public:
-    std::vector<waypoint> plan;
+    std::vector<Waypoint> plan;
 
     std::string toString(uint precision = 14);
     void toFile(std::string path);

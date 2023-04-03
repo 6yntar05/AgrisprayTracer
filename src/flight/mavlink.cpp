@@ -6,7 +6,7 @@
 namespace agris::mavlink {
 
 // class flightPlan
-std::string flightPlan::toString(uint precision) {
+std::string FlightPlan::toString(uint precision) {
     std::ostringstream stream;
     stream.precision(precision);
     stream << std::fixed; // Fixed precision
@@ -14,7 +14,7 @@ std::string flightPlan::toString(uint precision) {
 
     for (size_t i = 0; i < plan.size(); i++) {
         // Stream every point to MavLink waypoints
-        waypoint point = plan.at(i);
+        Waypoint point = plan.at(i);
         stream << i+1 << '\t'                 // Index
             << point.currentWP      << '\t' // Current WP
             << point.coordFrame     << '\t' // Coord frame
@@ -31,7 +31,7 @@ std::string flightPlan::toString(uint precision) {
 
     return std::move(stream).str();
 }
-void flightPlan::toFile(std::string path) {
+void FlightPlan::toFile(std::string path) {
     std::ofstream file(path);
     file << this->toString();
     file.close();

@@ -3,28 +3,41 @@
 #include "poly/utils/geo.h"
 
 #include <vector>
+#include <iomanip>
 #include <iostream>
 
 namespace agris::geo {
 
-struct quant {
-    coordinate coord;
+struct Quant {
+    Coordinate coord;
     bool isFilled = false;
 };
 
-class quanizedField {
+class QuanizedField {
   private:
-    std::vector<quant> quantized;
+    std::vector<Quant> quantized;
 
   public:
-    quanizedField(field field, double droneSize, double sprayRadius) {
+    QuanizedField(Field field, double droneSize, double sprayRadius) {
         this->quantized = {};
 
         // Find corners to split field:
         auto corners = findCorners(field);
-
-        std::cout << '['<<corners.first.latitude<<','<<corners.first.longitude
-          << "] <-> ["<<corners.second.latitude<<','<<corners.second.longitude<<']' << std::endl;
+        std::cerr << "Verbose: field corners:\n" << std::setprecision(16)
+			<< '['<<corners.first.latitude<<','<<corners.first.longitude
+        	<< "] <-> ["<<corners.second.latitude<<','<<corners.second.longitude<<']' << std::endl;
+		
+		// Splitting:
+		std::cerr << "\tDiagonal: \t" << geo::pointsDiff(corners.first, corners.second) * 1000.0
+			<< "m\n\tLenght: \t" << geo::pointsDiff(corners.first, {corners.first.latitude, corners.second.longitude}) * 1000.0
+			<< "m\n\tWidth: \t\t" << geo::pointsDiff(corners.first, {corners.second.latitude, corners.first.longitude}) * 1000.0 << "m\n";
+		
+		Coordinate testPoint = findPoint(
+			corners.first,
+			geo::pointsDiff(corners.first, {corners.first.latitude, corners.second.longitude}),
+			geo::pointsDiff(corners.first, {corners.second.latitude, corners.first.longitude})
+		);
+		std::cerr << "Test: " << testPoint.latitude << ", " << testPoint.longitude << '\n';
     }
 };
 
