@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
 
 	// Try to trace polygon for agricultural drone (Simple version for now)
 	agris::TraceParams params { // Params for tracer
-		{}, {}, {}, {}, {{}}, {}
+		{}, {}, {}, {}, 1.0, {{}}, {}
 	};
 
 	// Trace

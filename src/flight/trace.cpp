@@ -10,7 +10,7 @@ namespace agris {
 
 // class Tracer
 Tracer::Tracer(const geo::Field& field, const TraceParams& params)
-: field(field), params(params), quants(field, params.droneSize, params.radius) {
+: field(field), params(params), quants(field, params.quantSize) {
     this->trace();
 }
 

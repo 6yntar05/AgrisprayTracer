@@ -15,10 +15,10 @@ struct Quant {
 
 class QuanizedField {
   private:
-    std::vector<Quant> quantized;
+    std::vector<std::vector<Quant>> quantized;
 
   public:
-    QuanizedField(Field field, double droneSize, double sprayRadius) {
+    QuanizedField(Field field, double quantSize) {
         this->quantized = {};
 
         // Find corners to split field:
@@ -27,17 +27,32 @@ class QuanizedField {
 			<< '['<<corners.first.latitude<<','<<corners.first.longitude
         	<< "] <-> ["<<corners.second.latitude<<','<<corners.second.longitude<<']' << std::endl;
 		
-		// Splitting:
-		std::cerr << "\tDiagonal: \t" << geo::pointsDiff(corners.first, corners.second) * 1000.0
-			<< "m\n\tLenght: \t" << geo::pointsDiff(corners.first, {corners.first.latitude, corners.second.longitude}) * 1000.0
-			<< "m\n\tWidth: \t\t" << geo::pointsDiff(corners.first, {corners.second.latitude, corners.first.longitude}) * 1000.0 << "m\n";
+		// Prepairing to splitting:
+		double lenght = geo::pointsDiff(corners.first, {corners.first.latitude, corners.second.longitude}) * 1000.0;
+		double width  = geo::pointsDiff(corners.first, {corners.second.latitude, corners.first.longitude}) * 1000.0;
+		std::cerr << "m\n\tLenght: \t" << lenght << "m\n\tWidth: \t\t" << width << "m\n"; // test
 		
-		Coordinate testPoint = findPoint(
+		Coordinate testPoint = findPoint( // test
 			corners.first,
 			geo::pointsDiff(corners.first, {corners.first.latitude, corners.second.longitude}),
 			geo::pointsDiff(corners.first, {corners.second.latitude, corners.first.longitude})
 		);
-		std::cerr << "Test: " << testPoint.latitude << ", " << testPoint.longitude << '\n';
+		std::cerr << "Test: " << testPoint.latitude << ", " << testPoint.longitude << '\n'; // test
+
+		// Quantize:
+		int x = lenght / quantSize, y = width / quantSize; // Resolution
+		std::cout << "\tsize x: " << x << "; size y: " << y << '\n'; // test
+		this->quantized.resize(x);
+
+		for (int l = 0; l < x; l++) { // Fill this->quantized field by lines:
+			std::vector<Quant> line;
+			line.resize(y);
+			for (int i = 0; i < y; i++) { // Fill every line:
+				line.push_back({Coordinate{}, false}); // No-filled | Geo coords
+			}
+
+			this->quantized.push_back(line);
+		}
     }
 };
 
