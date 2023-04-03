@@ -16,8 +16,14 @@ int main(int argc, char* argv[]) {
 	std::cout << field.toString();
 
 	// Try to trace polygon for agricultural drone (Simple version for now)
-	agris::TraceParams params { // Params for tracer
-		{}, {}, {}, {}, 1.0, {{}}, {}
+	agris::TraceParams params {
+		field.outerBoundary.at(0),	// takeoff coord
+		field.outerBoundary.at(0),	// landing coord
+		20.0,	// Altitude
+		6.0,	// Drone size
+		1.0, 	// Field quant size
+		8.0,	// Trace spray radius
+		{{}}	// Spray params... Later
 	};
 
 	// Trace
