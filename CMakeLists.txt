@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 project(            AgrisprayTracer
     DESCRIPTION     "Trace .kml poly to flight-plan waypoints for agricultural drone"
     HOMEPAGE_URL    "https://github.com/6yntar05/AgrisprayTracer"
@@ -39,12 +39,10 @@ include_directories(AFTER SYSTEM ./src)
 
 if(QT_FOUND)
     if(QT_VERSION_MAJOR GREATER_EQUAL 6)
-        qt_add_executable(${PROJECT_NAME} MANUAL_FINALIZATION ${SRCFILES})
-        qt_finalize_executable(${PROJECT_NAME})
-    else()
-        add_executable(${PROJECT_NAME} ${SRCFILES})
+        qt_standard_project_setup()
     endif()
-    target_link_libraries   (${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Widgets ${LibKML_LIBS})
+    add_executable(${PROJECT_NAME} ${SRCFILES})
+    target_link_libraries (${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Widgets ${LibKML_LIBS})
 else()
     message(FATAL_ERROR "QT Not found! Install QT and add it to PATH if you use Windows")
 endif()

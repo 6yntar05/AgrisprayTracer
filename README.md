@@ -13,7 +13,7 @@
 - Build app:
     - `git clone https://github.com/6yntar05/AgrisprayTracer`
     - `mkdir build; cd build`
-    - `cmake ..; cmake --build . -j12`
+    - `cmake ..; cmake --build . -j${nproc}`
 - `./AgrisprayTracer <Path to .kml> [Path to output .waypoints]`
 
 ### Windows:
