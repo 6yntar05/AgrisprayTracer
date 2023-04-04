@@ -7,6 +7,10 @@
     - Debian/Ubuntu/... :
       - `sudo apt update; sudo apt install cmake git build-essential minizip liburiparser-dev liburiparser1 libboost-tools-dev`
       - `sudo apt install libkml-dev`
+    - Fedora:
+      - `sudo dnf update`
+      - `sudo dnf group install "C Development Tools and Libraries" "Development Tools"`
+      - `sudo dnf install cmake extra-cmake-modules libkml libkml-devel minizip-compat minizip-compat-devel`
     - ArchLinux:
       - `sudo pacman -Suuyy cmake extra-cmake-modules git boost-libs uriparser qt6 minizip`
       - `yay -S libkml-git`
