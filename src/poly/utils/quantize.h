@@ -5,18 +5,18 @@
 #include <vector>
 #include <iomanip>
 #include <iostream>
-
+#include <cmath>
 namespace agris::geo {
 
-inline bool foundIsOutside(Coordinate x, Coordinate y, Coordinate center, double droneRadius) {
+inline bool foundIsOutside(Coordinate x, Coordinate y, Coordinate center, double droneRadius,double xt,double yt) {
 	//Canonical equation of a straight line
-	/*double yrav = ;
+	double yrav = (((y.latitude-y.longitude) / (x.latitude-x.longitude)) * xt) - (yt + ((y.latitude-y.longitude) / (x.latitude-x.longitude)));
 	if (yrav == droneRadius){
 		return true;
 	}else
 	{
 		return false;
-	}*/
+	}
 };
 
 struct Quant {
