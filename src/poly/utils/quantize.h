@@ -9,8 +9,14 @@
 namespace agris::geo {
 
 inline bool foundIsOutside(Coordinate x, Coordinate y, Coordinate center, double droneRadius) {
-	// Aboba
-	return true;
+	//Canonical equation of a straight line
+	/*double yrav = ;
+	if (yrav == droneRadius){
+		return true;
+	}else
+	{
+		return false;
+	}*/
 };
 
 struct Quant {
