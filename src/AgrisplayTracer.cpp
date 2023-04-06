@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 		field.outerBoundary.at(0),	// landing coord
 		20.0,	// Altitude
 		6.0,	// Drone size
-		1.0, 	// Field quant size
+		2.0, 	// Field quant size
 		8.0,	// Trace spray radius
 		{{}}	// Spray params... Later
 	};

@@ -8,15 +8,23 @@
 #include <cmath>
 namespace agris::geo {
 
-inline bool foundIsOutside(Coordinate x, Coordinate y, Coordinate center, double droneRadius,double xt,double yt) {
-	//Canonical equation of a straight line
-	double yrav = (((y.latitude-y.longitude) / (x.latitude-x.longitude)) * xt) - (yt + ((y.latitude-y.longitude) / (x.latitude-x.longitude)));
-	if (yrav == droneRadius){
+inline bool isBoundaryProhibit(Coordinate first, Coordinate second, Coordinate center, double droneRadius) {
+	// Canonical equation of a straight line
+	double m = (second.longitude - first.longitude) /
+			  //----------------------------------
+			   (second.latitude - first.latitude);		// angle ratio
+			
+	double b = first.longitude - (m * first.latitude);	// y-offset
+
+	double d = std::abs((m*center.latitude) - center.longitude + b) /
+			  //-------------------------------------------
+			   				sqrt( pow(m, 2.0) + 1.0 );		// center to enge distance
+	
+	d *= 100000.0; // accuracy warning
+
+	if (d > droneRadius)
 		return true;
-	}else
-	{
-		return false;
-	}
+	return false;
 };
 
 struct Quant {
@@ -30,6 +38,7 @@ class QuanizedField {
     std::vector<std::vector<Quant>> quantized;
 	Field source;
 
+	std::pair<Coordinate, Coordinate> corners;
 	double lenght;
 	double width;
 
@@ -43,10 +52,16 @@ class QuanizedField {
 			std::vector<Quant> line;
 			line.resize(y);
 			for (int i = 0; i < y; i++) { 	// Fill every line:
-				Coordinate center {50.0, 50.0}; // TODO
+				Coordinate center {
+					((corners.second.latitude - corners.first.latitude) / double(y))*double(i)
+						+ corners.first.latitude + (quantSize / 2.0),
+					((corners.second.longitude - corners.first.longitude) / double(x))*double(l)
+						+ corners.first.longitude + (quantSize / 2.0)
+				};
+				std::cerr << "x|y: " << l << ';' << i << "; X|Y: " << center.latitude <<';'<< center.longitude << std::endl; // test
 
 				bool isOutside; // lenght between center and interpolated line of 2 geocoords < droneSize
-				isOutside = foundIsOutside({49.9999, 49.9999}, {50.0001, 50.0001}, center, droneRadius); // TODO: closest coords
+				isOutside = isBoundaryProhibit({58.22, 84.74}, {58.23, 84.75}, center, droneRadius); // TODO: closest coords
 
 				line.push_back({ center, isOutside }); // Single quant
 			}
@@ -56,9 +71,7 @@ class QuanizedField {
 	}
 
     QuanizedField(Field source)
-	: source(source) {
-        // Find corners to split field:
-        auto corners = findCorners(source);
+	: source(source), corners(findCorners(source)) {
         std::cerr << "Verbose: field corners:\n" << std::setprecision(16)
 			<< '['<<corners.first.latitude<<','<<corners.first.longitude
         	<< "] <-> ["<<corners.second.latitude<<','<<corners.second.longitude<<']' << std::endl;
@@ -67,13 +80,6 @@ class QuanizedField {
 		this->lenght = geo::pointsDiff(corners.first, {corners.first.latitude, corners.second.longitude}) * 1000.0;
 		this->width  = geo::pointsDiff(corners.first, {corners.second.latitude, corners.first.longitude}) * 1000.0;
 		std::cerr << "m\n\tLenght: \t" << lenght << "m\n\tWidth: \t\t" << width << "m\n"; // test
-		
-		Coordinate testPoint = findPoint( // test
-			corners.first,
-			geo::pointsDiff(corners.first, {corners.first.latitude, corners.second.longitude}),
-			geo::pointsDiff(corners.first, {corners.second.latitude, corners.first.longitude})
-		);
-		std::cerr << "Test: " << testPoint.latitude << ", " << testPoint.longitude << '\n'; // test
     }
 };
 

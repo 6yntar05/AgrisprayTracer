@@ -11,6 +11,9 @@ struct Coordinate {
     double longitude;
     //double altitude;
     //double heading;
+
+    Coordinate() = default;
+    Coordinate(double latitude, double longitude) : latitude(latitude), longitude(longitude) {}
 };
 
 using Boundary = std::vector<Coordinate>;
