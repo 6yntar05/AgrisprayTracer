@@ -8,7 +8,7 @@
 #include <cmath>
 namespace agris::geo {
 
-inline bool isBoundaryProhibit(Coordinate first, Coordinate second, Coordinate center, double droneRadius) {
+inline bool isBoundaryNotProhibit(Coordinate first, Coordinate second, Coordinate center, double droneRadius) {
 	// Canonical equation of a straight line
 	double m = (second.longitude - first.longitude) /
 			  //----------------------------------
@@ -35,7 +35,6 @@ struct Quant {
 
 class QuanizedField {
   private:
-    std::vector<std::vector<Quant>> quantized;
 	Field source;
 
 	std::pair<Coordinate, Coordinate> corners;
@@ -43,25 +42,49 @@ class QuanizedField {
 	double width;
 
   public:
+    std::vector<std::vector<Quant>> quantized;
+
 	void quantize(double quantSize, double droneRadius) {
 		int x = lenght / quantSize, y = width / quantSize; // Resolution
 		std::cout << "\tsize x: " << x << "; size y: " << y << '\n'; // test
-		this->quantized.resize(x);
+		//this->quantized.resize(x);
 
-		for (int l = 0; l < x; l++) { // Fill this->quantized field by lines:
+		for (int xi = 0; xi < x; xi++) { // Fill this->quantized field by lines:
 			std::vector<Quant> line;
-			line.resize(y);
-			for (int i = 0; i < y; i++) { 	// Fill every line:
+			//line.resize(y);
+			for (int yi = 0; yi < y; yi++) { 	// Fill every line:
 				Coordinate center {
-					((corners.second.latitude - corners.first.latitude) / double(y))*double(i)
+					((corners.second.latitude - corners.first.longitude) / double(y))*double(yi)
 						+ corners.first.latitude + (quantSize / 2.0),
-					((corners.second.longitude - corners.first.longitude) / double(x))*double(l)
+					((corners.second.longitude - corners.first.latitude) / double(x))*double(xi)
 						+ corners.first.longitude + (quantSize / 2.0)
 				};
-				std::cerr << "x|y: " << l << ';' << i << "; X|Y: " << center.latitude <<';'<< center.longitude << std::endl; // test
+				//std::cerr << "x|y: " << xi << ';' << yi << "; X|Y: " << center.latitude <<';'<< center.longitude << std::endl; // test
+
+				double closestDistance = 228777;
+				size_t closestIndex = 0;
+				for (size_t i = 0; i < this->source.outerBoundary.size(); i++) {
+					auto& coord = this->source.outerBoundary.at(i);
+					double currentDistance = std::sqrt(
+						std::pow(std::abs(center.latitude - coord.latitude), 2) +
+						std::pow(std::abs(center.longitude - coord.longitude), 2)
+					);
+					if (currentDistance < closestDistance) {
+						closestDistance = currentDistance;
+						closestIndex = i;
+					}
+				}
 
 				bool isOutside; // lenght between center and interpolated line of 2 geocoords < droneSize
-				isOutside = isBoundaryProhibit({58.22, 84.74}, {58.23, 84.75}, center, droneRadius); // TODO: closest coords
+				isOutside = isBoundaryNotProhibit(
+					this->source.outerBoundary.at(closestIndex),
+					this->source.outerBoundary.at(closestIndex+1),
+					center, droneRadius * 1000099
+				) || isBoundaryNotProhibit(
+					this->source.outerBoundary.at(closestIndex-1),
+					this->source.outerBoundary.at(closestIndex),
+					center, droneRadius * 1000099
+				);
 
 				line.push_back({ center, isOutside }); // Single quant
 			}

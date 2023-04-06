@@ -13,6 +13,13 @@ Tracer::Tracer(const geo::Field& field, const TraceParams& params)
 : field(field), params(params), quants(field) {
     this->quants.quantize(params.quantSize, params.droneSize/2.0);
     this->trace();
+
+    for (auto i : this->quants.quantized) {
+        for (auto j : i) {
+            std::cerr << ((j.isOutside) ? '*' : '-') << ' ';
+        }
+        std::cerr << '\n';
+    }
 }
 
 void Tracer::trace() noexcept {
