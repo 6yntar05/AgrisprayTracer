@@ -47,23 +47,25 @@ class QuanizedField {
 	void quantize(double quantSize, double droneRadius) {
 		int x = lenght / quantSize, y = width / quantSize; // Resolution
 		std::cout << "\tsize x: " << x << "; size y: " << y << '\n'; // test
-		//this->quantized.resize(x);
+		this->quantized.resize(y);
 
 		for (int xi = 0; xi < x; xi++) { // Fill this->quantized field by lines:
 			std::vector<Quant> line;
-			//line.resize(y);
-			for (int yi = 0; yi < y; yi++) { 	// Fill every line:
+
+			for (int yi = 0; yi < y; yi++) { // Fill every line: // TODO: fix this shit
+				float yRelative = (corners.second.latitude - corners.first.latitude) / double(y);
+				float xRelative = (corners.second.longitude - corners.first.longitude) / double(x);
+
 				Coordinate center {
-					((corners.second.latitude - corners.first.longitude) / double(y))*double(yi)
-						+ corners.first.latitude + (quantSize / 2.0),
-					((corners.second.longitude - corners.first.latitude) / double(x))*double(xi)
-						+ corners.first.longitude + (quantSize / 2.0)
+					yRelative * double(yi) + corners.first.latitude + (yRelative / 2.0),
+					xRelative * double(xi) + corners.first.longitude + (xRelative / 2.0)
 				};
-				//std::cerr << "x|y: " << xi << ';' << yi << "; X|Y: " << center.latitude <<';'<< center.longitude << std::endl; // test
+
+				std::cerr << "x|y: " << xi << ';' << yi << "; X|Y: " << center.latitude <<';'<< center.longitude << std::endl; // test
 
 				double closestDistance = 228777;
-				size_t closestIndex = 0;
-				for (size_t i = 0; i < this->source.outerBoundary.size(); i++) {
+				size_t closestIndex = 1;
+				for (size_t i = 1; i < this->source.outerBoundary.size(); i++) {
 					auto& coord = this->source.outerBoundary.at(i);
 					double currentDistance = std::sqrt(
 						std::pow(std::abs(center.latitude - coord.latitude), 2) +
@@ -76,16 +78,17 @@ class QuanizedField {
 				}
 
 				bool isOutside; // lenght between center and interpolated line of 2 geocoords < droneSize
-				isOutside = isBoundaryNotProhibit(
-					this->source.outerBoundary.at(closestIndex),
-					this->source.outerBoundary.at(closestIndex+1),
-					center, droneRadius * 1000099
-				) || isBoundaryNotProhibit(
-					this->source.outerBoundary.at(closestIndex-1),
-					this->source.outerBoundary.at(closestIndex),
-					center, droneRadius * 1000099
-				);
-
+				try {
+					isOutside = isBoundaryNotProhibit(
+						this->source.outerBoundary.at(closestIndex),
+						this->source.outerBoundary.at(closestIndex+1),
+						center, droneRadius
+					) || isBoundaryNotProhibit(
+						this->source.outerBoundary.at(closestIndex-1),
+						this->source.outerBoundary.at(closestIndex),
+						center, droneRadius
+					);
+				} catch (...) { isOutside = false; }
 				line.push_back({ center, isOutside }); // Single quant
 			}
 
