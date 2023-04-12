@@ -12,14 +12,15 @@ namespace agris {
 Tracer::Tracer(const geo::Field& field, const TraceParams& params)
 : field(field), params(params), quants(field) {
     this->quants.quantize(params.quantSize, params.droneSize/2.0);
-    this->trace();
 
-    for (auto i : this->quants.quantized) {
-        for (auto j : i) {
-            std::cerr << ((j.isOutside) ? '*' : '-') << ' ';
+    for (std::vector<geo::Quant> row : this->quants.quantized) {
+        for (geo::Quant quant : row) {
+            std::cerr << ((quant.isOutside) ? '*' : '-') << ' ';
         }
         std::cerr << '\n';
     }
+
+    this->trace();
 }
 
 void Tracer::trace() noexcept {
