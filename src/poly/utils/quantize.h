@@ -27,6 +27,42 @@ inline bool isBoundaryNotProhibit(Coordinate first, Coordinate second, Coordinat
 	return false;
 };
 
+struct Line {
+	float angle;
+	Coordinate begin;
+	Coordinate end;
+	std::vector<Coordinate> breaks;
+};
+
+class LinedField {
+private:
+	Field source;
+
+	std::pair<Coordinate, Coordinate> corners;
+	double lenght;
+	double width;
+
+public:
+	std::vector<Line> lines;
+
+	void makelines(double angle, double offset = 0.0) {
+		// TODO
+	}
+
+	LinedField(Field source)
+	: source(source), corners(findCorners(source)) {
+        std::cerr << "Verbose: field corners:\n" << std::setprecision(16)
+			<< '['<<corners.first.latitude<<','<<corners.first.longitude
+        	<< "] <-> ["<<corners.second.latitude<<','<<corners.second.longitude<<']' << std::endl;
+		
+		// Prepairing to splitting:
+		this->lenght = geo::pointsDiff(corners.first, {corners.first.latitude, corners.second.longitude}) * 1000.0;
+		this->width  = geo::pointsDiff(corners.first, {corners.second.latitude, corners.first.longitude}) * 1000.0;
+		std::cerr << "m\n\tLenght: \t" << lenght << "m\n\tWidth: \t\t" << width << "m\n"; // test
+    }
+};
+
+/*
 struct Quant {
     Coordinate coord;
 	bool isOutside = false;
@@ -108,5 +144,6 @@ class QuanizedField {
 		std::cerr << "m\n\tLenght: \t" << lenght << "m\n\tWidth: \t\t" << width << "m\n"; // test
     }
 };
+*/
 
 } // namespace agris::geo

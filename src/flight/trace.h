@@ -45,7 +45,8 @@ struct TraceParams {
     geo::Coordinate landingCoord = takeoffCoord;
     double altitude  = 50.0;
     double droneSize = 5.0;
-    double quantSize = 1.0;
+    //double quantSize = 1.0;
+    double angle = 90;
     double radius;
 
     // Spray:
@@ -61,7 +62,8 @@ class Tracer {
     mavlink::FlightPlan plan;
     // Internal data
     geo::Coordinate begin;
-    geo::QuanizedField quants;
+    //geo::QuanizedField quants;
+    geo::LinedField lines;
 
     public:
     // Service
