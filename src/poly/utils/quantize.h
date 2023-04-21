@@ -28,7 +28,7 @@ inline bool isBoundaryNotProhibit(Coordinate first, Coordinate second, Coordinat
 };
 
 struct Line {
-	float angle;
+	double angle;
 	Coordinate begin;
 	Coordinate end;
 	std::vector<Coordinate> breaks;
@@ -46,7 +46,21 @@ public:
 	std::vector<Line> lines;
 
 	void makelines(double quantSize, double angle, double offset = 0.0) {
-		// TODO
+		Coordinate start{corners.first.latitude + offset, corners.first.longitude};
+		double xstep = quantSize * std::cos(angle);
+		double ystep = quantSize * std::sin(angle);
+
+		for(double x = start.latitude, y=start.longitude; 
+			x < corners.second.latitude && y < corners.second.longitude;
+			x += xstep, y+=ystep){
+				// Create a line segment from (x, y) to (x + xstep, y + ystep
+				Coordinate begin{x, y};
+				Coordinate end{x + xstep, y + ystep};
+				lines.push_back(Line{angle, begin, end, {}})
+			}
+
+		
+		
 	}
 
 	LinedField(Field source)
