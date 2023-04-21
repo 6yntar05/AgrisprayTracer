@@ -45,7 +45,7 @@ struct TraceParams {
     geo::Coordinate landingCoord = takeoffCoord;
     double altitude  = 50.0;
     double droneSize = 5.0;
-    //double quantSize = 1.0;
+    double quantSize = 1.0;
     double angle = 90;
     double radius;
 

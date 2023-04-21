@@ -11,7 +11,7 @@ namespace agris {
 // class Tracer
 Tracer::Tracer(const geo::Field& field, const TraceParams& params)
 : field(field), params(params), lines(field) {
-    this->lines.makelines(params.angle);
+    this->lines.makelines(params.angle, params.angle);
 
     //this->trace();
 }

@@ -45,7 +45,7 @@ private:
 public:
 	std::vector<Line> lines;
 
-	void makelines(double angle, double offset = 0.0) {
+	void makelines(double quantSize, double angle, double offset = 0.0) {
 		// TODO
 	}
 
