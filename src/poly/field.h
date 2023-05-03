@@ -9,8 +9,8 @@ namespace agris::geo {
 struct Coordinate {
     double latitude;
     double longitude;
-    //double altitude;
-    //double heading;
+    double altitude;
+    double heading;
 
     Coordinate() = default;
     Coordinate(double latitude, double longitude) : latitude(latitude), longitude(longitude) {}

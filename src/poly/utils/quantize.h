@@ -53,10 +53,10 @@ public:
 		for(double x = start.latitude, y=start.longitude; 
 			x < corners.second.latitude && y < corners.second.longitude;
 			x += xstep, y+=ystep){
-				// Create a line segment from (x, y) to (x + xstep, y + ystep
+				// Create a line segment from (x, y) to (x + xstep, y + ystep)
 				Coordinate begin{x, y};
 				Coordinate end{x + xstep, y + ystep};
-				lines.push_back(Line{angle, begin, end, {}})
+				lines.push_back(Line{angle, begin, end, {}});
 			}
 
 		
